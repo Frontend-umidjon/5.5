@@ -8,7 +8,7 @@ const HeaderActions = () => {
 
   useEffect(() => {
     if (search) {
-      axios.get(`https://dummyjson.com/products/search?q=${search}`).then((res) => {
+      axios.get(`https://dummyjson.com/products/search?q=${search}&limit=5`).then((res) => {
         setData(res.data);
         console.log(res.data);
       });
@@ -30,7 +30,7 @@ const HeaderActions = () => {
           </button>
         </div>
         {data && data.products && (
-          <div className="mt-6 bg-gray-800 p-4 rounded-lg shadow-xl animate-fadeIn space-y-4">
+          <div className=" absolute top-12 left-0 right-0  z-10 mt-6 bg-gray-800 p-4 rounded-lg shadow-xl animate-fadeIn space-y-4">
             {data.products.map((item) => (
               <div
                 key={item.id}
