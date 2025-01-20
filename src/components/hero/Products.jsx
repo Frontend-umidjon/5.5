@@ -19,7 +19,7 @@ const Products = () => {
       });
   }, []);
 
-  const skeletonArray = Array(10).fill(null); // Создаём массив для 10 "заглушек"
+  const skeletonArray = Array(10).fill(null);
 
   return (
     <div className="bg-gradient-to-b from-gray-900 via-black to-gray-800 min-h-screen py-20">
