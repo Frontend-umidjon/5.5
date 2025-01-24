@@ -16,7 +16,6 @@ const Products = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch categories
     api
       .get("/products/category-list")
       .then((res) => {
@@ -61,7 +60,7 @@ const Products = () => {
     fetchProducts(category, 1);
   };
 
-  const handlePageChange = (event, value) => {
+  const handlePageChange = ( value) => {
     setPage(value);
   };
 
@@ -74,7 +73,6 @@ const Products = () => {
         <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-indigo-500 mb-8 font-orbitron">
           Products
         </h1>
-        {/* Categories */}
         <ul className="flex gap-4 overflow-auto py-4 px-2 bg-transparent rounded-lg shadow-lg">
           {loading
             ? categorySkeletonArray.map((_, index) => (
@@ -91,14 +89,16 @@ const Products = () => {
                       : "hover:bg-gray-800 hover:border-cyan-500"
                   }`}
                   key={category}
-                  onClick={() => handleCategoryClick(category)}
+                  onClick={() => {
+                    handleCategoryClick(category)
+                    setData([]);
+                  }
+                  }
                 >
                   {category}
                 </li>
               ))}
         </ul>
-
-        {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mt-8">
           {data.map((item) => (
             <div
@@ -132,8 +132,6 @@ const Products = () => {
               </div>
             ))}
         </div>
-
-        {/* Pagination */}
         <div className="flex justify-center mt-8">
           <Stack spacing={2}>
             <Pagination
@@ -145,8 +143,6 @@ const Products = () => {
           </Stack>
         </div>
       </div>
-
-      {/* Modal */}
       {selectedProduct && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 modal-animation"
