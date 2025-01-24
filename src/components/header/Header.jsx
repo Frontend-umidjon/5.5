@@ -1,6 +1,7 @@
 import React from 'react';
 import { LINKS } from '../../static';
 import HeaderActions from '../headerActions/HeaderActions';
+import { NavLink, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 
 const Header = () => {
   return (
@@ -14,12 +15,8 @@ const Header = () => {
             DUMMYJSON
           </a>
           <ul className="flex gap-10">
-            {LINKS.map((link) => (
-              <li key={link.id}>
-                <a href={link.url} className="hover:text-pink-600 transition duration-300 ease-in-out transform hover:scale-115">
-                  {link.title}
-                </a>
-              </li>
+            {LINKS?.map((link) => (
+             <NavLink to={link.url} key={link.id} className={({ isActive }) => isActive ? "text-cyan-500" : ""}>{link.title}</NavLink>
             ))}
           </ul>
           <HeaderActions />
