@@ -31,15 +31,15 @@ const HeaderActions = () => {
           <input
             type="text"
             placeholder="Search"
-            className="w-full p-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             onChange={(e) => setSearch(e.target.value)} onBlur={() => setSearch('')}
           />
-          <button type="button" className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+          <button type="button" className="p-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
             <IoSearch size={24} />
           </button>
         </div>
         {data && data.products.length > 0 && search && data.total > 0 && (
-          <div className=" overflow-auto max-h-[400px] absolute top-12 left-0 right-0  z-10 mt-6  bg-gray-800 p-4 rounded-lg shadow-xl animate-fadeIn space-y-4 ">
+          <div className=" overflow-auto max-h-[400px] absolute top-12 left-0 right-0  z-10 mt-6 bg-gray-800 p-4 rounded-lg shadow-xl animate-fadeIn space-y-4 ">
             {data.products.map((item) => (
               <div
                 key={item.id}

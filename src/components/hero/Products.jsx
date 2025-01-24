@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import api from "../../api";
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
 const Products = () => {
   const limit = 10;
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [count, setCount] = useState(0);
   const [categories, setCategories] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState(null); // Для всплывающего окна
+  const [selectedProduct, setSelectedProduct] = useState(null); 
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [page, setPage] = useState(1); 
+  const [totalPages, setTotalPages] = useState(1); //Sahifalar soni
 
   useEffect(() => {
     api
@@ -20,39 +24,21 @@ const Products = () => {
       });
   }, []);
 
-  const handleCategoryClick = (category) => {
-    if (category === "all") {
-      api
-        .get("/products")
-        .then((res) => {
-          setData(res.data.products);
-        })
-        .catch((err) => {
-          console.error("Error fetching products:", err);
-        });
-    } else {
-      api
-        .get(`/products/category/${category}`)
-        .then((res) => {
-          setData(res.data.products);
-        })
-        .catch((err) => {
-          console.error("Error fetching products:", err);
-        });
-    }
-  };
-
-  useEffect(() => {
+  const fetchProducts = (category = "all", page = 1) => {
     setLoading(true);
+    const endpoint =
+      category === "all" ? "/products" : `/products/category/${category}`;
+    
     api
-      .get("/products", {
+      .get(endpoint, {
         params: {
           limit,
-          skip: count * limit,
+          skip: (page - 1) * limit,
         },
       })
       .then((res) => {
-        setData((prevData) => [...prevData, ...res.data.products]);
+        setData(res.data.products);
+        setTotalPages(Math.ceil(res.data.total / limit)); 
       })
       .catch((err) => {
         console.error("Error fetching products:", err);
@@ -60,7 +46,21 @@ const Products = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [count]);
+  };
+
+  useEffect(() => {
+    fetchProducts(selectedCategory, page);
+  }, [selectedCategory, page]);
+
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+    setPage(1); // O'tgan safargidagi hato
+    fetchProducts(category, 1);
+  };
+
+  const handlePageChange = ( value) => {
+    setPage(value);
+  };
 
   const skeletonArray = Array(limit).fill(null);
   const categorySkeletonArray = Array(15).fill(null);
@@ -81,7 +81,7 @@ const Products = () => {
               ))
             : categories.map((category) => (
                 <li
-                  className="text-base text-gray-400 hover:text-cyan-500 transition duration-700 ease-in-out transform hover:scale-125 capitalize text-nowrap cursor-pointer px-4 py-2 rounded-lg hover:bg-gray-800 border border-transparent hover:border-cyan-500"
+                  className="text-base text-gray-400 hover:text-cyan-500 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110 capitalize text-nowrap cursor-pointer px-4 py-2 rounded-lg hover:bg-gray-800 border border-transparent hover:border-cyan-500"
                   key={category}
                   onClick={() => handleCategoryClick(category)}
                 >
@@ -94,7 +94,7 @@ const Products = () => {
             <div
               key={item.id}
               className="relative cursor-pointer p-6 bg-gray-900 rounded-lg shadow-lg border border-cyan-500/20"
-              onClick={() => setSelectedProduct(item)} // Открыть popup
+              onClick={() => setSelectedProduct(item)} 
             >
               <div className="absolute top-4 right-4 bg-gray-800 rounded-lg px-2 py-1 text-sm font-semibold text-cyan-500 mb-2 animate-pulse">
                 -{item.discountPercentage}%
@@ -125,23 +125,23 @@ const Products = () => {
             ))}
         </div>
         <div className="flex justify-center mt-8">
-          {data.length >= limit && (
-            <button
-              onClick={() => setCount((prevCount) => prevCount + 1)}
-              className="bg-cyan-500 hover:bg-indigo-500 transition duration-700 ease-in-out transform hover:scale-125 text-white font-semibold py-2 px-4 rounded-lg shadow-lg"
-            >
-              Load More
-            </button>
-          )}
+          <Stack spacing={2}>
+            <Pagination 
+              count={totalPages} 
+              page={page} 
+              onChange={handlePageChange} 
+              color="primary" 
+            />
+          </Stack>
         </div>
       </div>
 
       {selectedProduct && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 modal-animation">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 modal-animation" onClick={() => setSelectedProduct(null)}>
           <div className="bg-gray-900 p-6 rounded-lg shadow-lg max-w-sm w-full relative">
             <button
               className="absolute top-4 right-4 text-gray-400 hover:text-cyan-500"
-              onClick={() => setSelectedProduct(null)} 
+              onClick={() => setSelectedProduct(null)}
             >
               ✖
             </button>
@@ -166,5 +166,6 @@ const Products = () => {
     </div>
   );
 };
+
 
 export default Products;
