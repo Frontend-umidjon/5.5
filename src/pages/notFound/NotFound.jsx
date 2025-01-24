@@ -7,7 +7,6 @@ import Particles from 'react-tsparticles';
 const NotFound = () => {
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 via-black to-gray-800 text-white overflow-hidden">
-      {/* Particles Background */}
       <Particles
         options={{
           fpsLimit: 60,
@@ -40,7 +39,6 @@ const NotFound = () => {
           },
         }}
       />
-      {/* Main 404 Content */}
       <div className="relative z-10 bg-gray-900 bg-opacity-80 p-8 rounded-3xl shadow-lg w-full max-w-md text-center border border-cyan-500 space-y-6 transform hover:scale-105 transition-transform duration-500">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
